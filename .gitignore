@@ -1,0 +1,25 @@
+# MacOS
+.DS_Store
+
+# Zephyr Workspace - Generated Directories (Heavy Dependencies)
+workspace/.west/
+workspace/bootloader/
+workspace/modules/
+workspace/tools/
+workspace/zephyr/
+
+# Build Artifacts
+workspace/build/
+**/build/
+**.log
+**.elf
+**.bin
+**.hex
+**.map
+
+# Editor / IDE
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json

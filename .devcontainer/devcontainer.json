@@ -1,0 +1,15 @@
+{
+  "name": "OCRE & Zephyr Dev",
+  "image": "zephyrprojectrtos/zephyr-build:latest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-python.python",
+        "trond-snekvik.gnu-mapfiles"
+      ]
+    }
+  },
+  "remoteUser": "user",
+  "postCreateCommand": "west init -m https://github.com/zephyrproject-rtos/zephyr --mr main workspace && cd workspace && west update && west zephyr-export"
+}

@@ -1,8 +1,8 @@
-# Log di Configurazione Tecnica: SpinKube & OCRE
+# Configurazione: SpinKube & OCRE
 
 Questo documento descrive i passi esatti eseguiti per configurare l'ambiente di ricerca per la tesi magistrale.
 
-## 1. Setup dell'Infrastruttura Kubernetes (Host OS: macOS M3)
+## 1. Setup dell'Infrastruttura Kubernetes
 
 L'obiettivo è creare un cluster locale che supporti nativamente carichi di lavoro WebAssembly.
 
@@ -74,7 +74,7 @@ Ambiente isolato per la compilazione del firmware e del runtime OCRE (basato su 
 
 ### 2.1 Configurazione `.devcontainer/devcontainer.json`
 
-Abbiamo configurato Cursor/VS Code per avviare un container Linux Ubuntu con la toolchain Zephyr.
+Abbiamo configurato Cursor per avviare un container Linux Ubuntu con la toolchain Zephyr.
 
 **Correzione Architetturale per macOS M3:**
 Inizialmente abbiamo provato a usare `--userns=keep-id`, ma è stato rimosso poiché Docker Desktop su Mac gestisce i permessi tramite virtualizzazione (virtiofs) e quel flag causava il fallimento del montaggio dei volumi.

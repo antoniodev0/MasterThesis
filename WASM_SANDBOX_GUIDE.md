@@ -38,7 +38,7 @@ Fermyon Spin ci permette di scrivere applicazioni e generare WebAssembly. Abbiam
 
 Kubernetes (e in particolare il container runtime k3s/containerd) richiede l'accesso tramite HTTPS protetto da TLS per scaricare immagini non locali. Per questo motivo, caricheremo l'artefatto WebAssembly (impacchettandolo in un formato compatibile con Docker, noto come OCI) su un registro pubblico e affidabile: il **GitHub Container Registry (GHCR)**.
 
-### Configurazione e Push su GHCR (Completato)
+### Configurazione e Push su GHCR
 
 #### 1. Generazione del Token su GitHub (PAT)
 Per consentire alla tua riga di comando di connettersi a GitHub, abbiamo utilizzato una chiave di accesso personalizzata (Token).
@@ -47,7 +47,7 @@ Per consentire alla tua riga di comando di connettersi a GitHub, abbiamo utilizz
 3. Assegnati i permessi: **`write:packages`** e **`delete:packages`**.
 
 #### 2. Autenticazione Locale
-Ci siamo autenticati con il tuo utente (`antoniodev0`):
+Autentichiamoci con il nostro utente:
 ```bash
 spin registry login ghcr.io -u antoniodev0 -p <La-Tua-Chiave-Segreta-ghp_...>
 ```

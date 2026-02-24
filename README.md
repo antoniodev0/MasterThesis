@@ -104,3 +104,19 @@ Per confermare che tutto sia configurato correttamente per la fase di sviluppo:
 *   **Stato Cluster:** `kubectl get nodes` -> 3 nodi Ready (1 Server, 2 Agents).
 *   **Stato Operatore:** `kubectl get pods -n spin-operator` -> Pods in Running.
 *   **Stato Embedded:** Terminale Cursor connesso al container con `west` versione 1.5.0
+
+## 4. Sviluppo dell'Applicazione WebAssembly
+
+Una volta preparato l'ambiente, abbiamo creato un'applicazione minimale per dimostrare il paradigma "Write Once, Run Anywhere".
+
+### 4.1 Creazione dell'App (Rust + Fermyon Spin)
+Abbiamo optato per Rust, essendo il linguaggio con il miglior supporto per WebAssembly (target `wasm32-wasip1`).
+- Scaffolding effettuato con **Fermyon Spin** (`spin build`).
+- L'applicazione (`hello-wasm/src/lib.rs`) espone un semplice endpoint HTTP.
+
+### 4.2 Distribuzione Duale
+Lo **stesso binario `.wasm`** è stato incapsulato per due destini differenti:
+1. **Cloud (Kubernetes):** Impacchettato come immagine OCI e descritto tramite il Custom Resource `SpinApp` (`k8s/spinapp.yaml`). (Richiede il push su un registro accessibile come GHCR).
+2. **Edge (Zephyr / OCRE):** Convertito in un array di byte C tramite lo script `prepare_for_ocre.sh` per essere integrato direttamente nel firmware come payload ed eseguito tramite il runtime WAMR (WebAssembly Micro Runtime).
+
+Per la guida dettagliata passo-passo sull'intero ciclo di vita di questa applicazione, consultare il nuovo file [WASM_SANDBOX_GUIDE.md](WASM_SANDBOX_GUIDE.md).

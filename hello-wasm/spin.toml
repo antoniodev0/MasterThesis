@@ -1,0 +1,20 @@
+#:schema https://schemas.spinframework.dev/spin/manifest-v2/latest.json
+
+spin_manifest_version = 2
+
+[application]
+name = "hello-wasm"
+version = "0.1.0"
+authors = ["antonio.ciliberto <antonio.ciliberto@smartme.io>"]
+description = ""
+
+[[trigger.http]]
+route = "/..."
+component = "hello-wasm"
+
+[component.hello-wasm]
+source = "target/wasm32-wasip1/release/hello_wasm.wasm"
+allowed_outbound_hosts = []
+[component.hello-wasm.build]
+command = "cargo build --target wasm32-wasip1 --release"
+watch = ["src/**/*.rs", "Cargo.toml"]

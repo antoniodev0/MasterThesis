@@ -88,5 +88,3 @@ cd /Users/antonio/Desktop/UNI/Tesi/
 # Elimina l'intero progetto (incluso il devcontainer e il codice compilato)
 rm -rf MasterThesis
 ```
-
-E con questo, il tuo Mac sarà esattamente come prima che iniziassimo a costruire la WebAssembly Sandbox! 🧹✨

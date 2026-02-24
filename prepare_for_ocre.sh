@@ -3,7 +3,7 @@ set -e
 
 echo "Preparing WebAssembly payload for OCRE (Zephyr)..."
 
-WASM_FILE="hello-wasm/target/wasm32-wasip1/release/hello_wasm.wasm"
+WASM_FILE="hello-wasm/target/wasm32-wasip1/release/hello-wasm.wasm"
 DEST_FILE="hello-wasm/hello_wasm_payload.h"
 
 if [ ! -f "$WASM_FILE" ]; then

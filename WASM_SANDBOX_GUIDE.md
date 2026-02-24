@@ -2,7 +2,7 @@
 
 Questo documento spiega in sequenza logica tutti i passaggi necessari per sviluppare, pacchettizzare e distribuire un'applicazione WebAssembly sia su un cluster Kubernetes (tramite SpinKube) sia su un dispositivo embedded (tramite Zephyr OS e OCRE).
 
-L'obiettivo è dimostrare il principio **"Write Once, Run Anywhere"** eseguendo l'esatto stesso artefatto `.wasm` in due mondi tecnologicamente molto distanti.
+L'obiettivo è dimostrare l'interoperabilità e il potenziale **Edge-to-Cloud** eseguendo artefatti WebAssembly sicuri: uno più pesante orientato all'ascolto (Spin su Kubernetes) e uno più leggero con un target limitato in esecuzione sull'Edge.
 
 ---
 
@@ -135,8 +135,9 @@ Per replicare accuratamente questa simulazione sul framework Zephyr:
 
 ## Next Steps per la Tesi (Cosa c'è da fare ora?)
 
-## Next Steps per la Tesi (Lavoro Restante)
+## Next Steps per la Tesi (Lavoro Restante: Implementazione Networking)
 
-Avendo stabilizzato completamente e *verificato* l'infrastruttura Cloud/Kubernetes con GHCR (Passo 1-3), il passo cruciale che ora dovrai sviluppare per finalizzare il prototipo hardware di tesi è relativo al comparto Embedded:
+Avendo stabilizzato completamente e *verificato* l sia l'infrastruttura Cloud/Kubernetes ospitata da GHCR (Passo 1-3), sia il container Wasm embedded ospitato su Zephyr tramite l'interprete WAMR (Passo 4), il passo cruciale che ora dovrai sviluppare per finalizzare il prototipo è realizzare la comunicazione:
 
-1. **Firmware Zephyr OCRE**: Questo è l'ultimo grande punto di ricerca! Costruisci ed espandi il codice C lato Zephyr per integrare la libreria WAMR nel progetto principale della tesi all'interno del tuo workspace, inietta ed avvia l'header "payload" convertito (che rappresenta sempre l'app in Rust `hello-wasm`) e testa l'output a riga di comando/seriale del dev container per catturare l'avvio della stringa `"Hello World"` generata dal Wasm all'interno di Zephyr.
+1. Modificare l'applicativo Rust sul microcontrollore Zephyr affinchè apra dei socket WASI per formare un pacchetto HTTP `GET` / `POST`.
+2. Trasmettere la chiamata sulla rete virtuale generata per far sì che il modulo WASM *Edge* interagisca formalmente con il modulo WASM *Cloud* (il container SpinKube) validando così lo schema di interazione sicura distribuita.

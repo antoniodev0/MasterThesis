@@ -1,6 +1,6 @@
-# Configurazione: SpinKube & OCRE
+# Tesi Magistrale: Edge-to-Cloud WebAssembly Sandbox (OCRE & SpinKube)
 
-Questo documento descrive i passi esatti eseguiti per configurare l'ambiente di ricerca per la tesi magistrale.
+Questo documento descrive l'architettura e i passi esatti eseguiti per configurare l'ambiente di ricerca per la tesi magistrale, focalizzata sull'interoperabilità di moduli WebAssembly tra Cloud ed Edge.
 
 ## 1. Setup dell'Infrastruttura Kubernetes
 
@@ -105,18 +105,32 @@ Per confermare che tutto sia configurato correttamente per la fase di sviluppo:
 *   **Stato Operatore:** `kubectl get pods -n spin-operator` -> Pods in Running.
 *   **Stato Embedded:** Terminale Cursor connesso al container con `west` versione 1.5.0
 
-## 4. Sviluppo dell'Applicazione WebAssembly
+## 4. Architettura Edge-to-Cloud (WebAssembly)
 
-Una volta preparato l'ambiente, abbiamo creato un'applicazione minimale per dimostrare il paradigma "Write Once, Run Anywhere".
+Una volta preparato l'ambiente, abbiamo delineato l'architettura applicativa per dimostrare l'interoperabilità strutturale di WebAssembly tra Cloud ed Edge. 
 
-### 4.1 Creazione dell'App (Rust + Fermyon Spin)
-Abbiamo optato per Rust, essendo il linguaggio con il miglior supporto per WebAssembly (target `wasm32-wasip1`).
-- Scaffolding effettuato con **Fermyon Spin** (`spin build`).
-- L'applicazione (`hello-wasm/src/lib.rs`) espone un semplice endpoint HTTP.
+### 4.1 Il Cloud (SpinKube / Kubernetes)
+Sfruttando **Fermyon Spin**, abbiamo sviluppato un componente orientato al backend (un *WASI Reactor* o *HTTP Component*). Questo modulo WebAssembly è stato:
+- Compilato in formato `.wasm`.
+- Impacchettato come immagine OCI e caricato su GitHub Container Registry (GHCR).
+- Distribuito sul cluster Kubernetes locale tramite la CRD `SpinApp` (`k8s/spinapp.yaml`).
+In questo strato, l'infrastruttura Cloud espone il web server, scala e riceve richieste HTTP in maniera efficiente, demandando la complessità del networking agli Shims di SpinKube.
 
-### 4.2 Distribuzione Duale
-Lo **stesso binario `.wasm`** è stato incapsulato per due destini differenti:
-1. **Cloud (Kubernetes):** Impacchettato come immagine OCI e descritto tramite il Custom Resource `SpinApp` (`k8s/spinapp.yaml`). (Richiede il push su un registro accessibile come GHCR).
-2. **Edge (Zephyr / OCRE):** Convertito in un array di byte C tramite lo script `prepare_for_ocre.sh` per essere integrato direttamente nel firmware come payload ed eseguito tramite il runtime WAMR (WebAssembly Micro Runtime).
+### 4.2 L'Edge (Zephyr / OCRE)
+Per l'Edge (microcontrollori e RTOS), abbiamo affrontato la limitazione tecnica nativa degli shims WASM. Non potendo ospitare un intero server Spin su Zephyr, abbiamo:
+1. Sviluppato un modulo Rust standalone trasformato in standard compilato `wasm32-wasip1` (*WASI Command*).
+2. Convertito il binario in un header C (`hello_wasm_payload.h`) tramite lo script automatizzato.
+3. Incorporato il payload nel firmware Zephyr, consentendo al runtime integrato (WAMR) di eseguirlo nativamente in una Sandbox con accesso diretto alla memoria heap base.
 
-Per la guida dettagliata passo-passo sull'intero ciclo di vita di questa applicazione, consultare il nuovo file [WASM_SANDBOX_GUIDE.md](WASM_SANDBOX_GUIDE.md).
+Il modulo Wasm lato Edge agisce quindi da "client", leggero e isolato, rispetto al server pesante sul Cloud.
+
+## 5. Next Steps della Tesi
+
+Attualmente, l'architettura di base è completa: il Cloud esegue con successo moduli HTTP Wasm e l'Edge emulato su QEMU o hardware fisico esegue in Sandbox moduli standard Wasm tramite Zephyr.
+
+**L'obiettivo finale e prossimo passo sarà abilitare il Networking:**
+Il codice Rust implementato sul microcontrollore Zephyr dovrà aprire un Socket di rete standard WASI (TCP), formattare una richiesta HTTP (es. GET/POST) e *chiamare* l'endpoint esposto dal cluster SpinKube. In questo modo si concretizzerà la comunicazione protetta Edge-to-Cloud demandata esclusivamente a moduli WebAssembly "universali".
+
+Per la guida dettagliata passo-passo sui due ambienti, consultare:
+- [Guida Cloud: WASM_SANDBOX_GUIDE.md](WASM_SANDBOX_GUIDE.md)
+- [Guida Edge: ZEPHYR_OCRE_GUIDE.md](ZEPHYR_OCRE_GUIDE.md)

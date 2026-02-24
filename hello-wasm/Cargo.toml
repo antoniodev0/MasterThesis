@@ -6,11 +6,5 @@ version = "0.1.0"
 rust-version = "1.78"
 edition = "2021"
 
-[lib]
-crate-type = ["cdylib"]
-
 [dependencies]
-anyhow = "1"
-spin-sdk = "5.2.0"
-
-[workspace]
+# No special dependencies needed for basic WASI println

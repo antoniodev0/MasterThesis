@@ -7,4 +7,6 @@ rust-version = "1.78"
 edition = "2021"
 
 [dependencies]
+wasi = "0.14.4"
+wasmedge_wasi_socket = "0.5.5"
 # No special dependencies needed for basic WASI println

@@ -45,8 +45,12 @@ int main(void) {
         return -1;
     }
 
-    // Pass NULL and 0 for args, envs, mapped dirs since we just want basic WASI init
+    // Pass address pool to allow WASI Socket external connections
+    // The format is "addr/mask". We allow the entire local subnet.
+    const char *addr_pool[1] = { "10.0.2.0/24" };
+
     wasm_runtime_set_wasi_args(module, NULL, 0, NULL, 0, NULL, 0, NULL, 0);
+    wasm_runtime_set_wasi_addr_pool(module, addr_pool, 1);
 
     wasm_module_inst_t module_inst = wasm_runtime_instantiate(module, 64 * 1024, 128 * 1024, error_buf, sizeof(error_buf));
     if (!module_inst) {
